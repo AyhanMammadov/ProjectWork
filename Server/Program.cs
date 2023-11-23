@@ -3,7 +3,7 @@ using Server.Repositories.EfCoreRepository;
 using System.Net;
 using System.Text.Json;
 
-var context = new MyEfRepository();
+var context = new EfRepository();
 context.Database.EnsureCreated(); // creating Database on other localhost
 
 HttpListener httpListener = new HttpListener();
@@ -16,17 +16,17 @@ System.Console.WriteLine($"Server started on '{port}' port");
 
 while (true)
 {
-    var context = await httpListener.GetContextAsync();
-    var rawUrl = context.Request.RawUrl.Trim('/').ToLower();
-    using var writer = new StreamWriter(context.Response.OutputStream);
+    var contextHttp = await httpListener.GetContextAsync();
+    var rawUrl = contextHttp.Request.RawUrl.Trim('/').ToLower();
+    using var writer = new StreamWriter(contextHttp.Response.OutputStream);
     var rawItems = rawUrl.Split('/');
 
     if (rawItems.First() == "cars")
     {
         // GET
-        if (context.Request.HttpMethod == HttpMethod.Get.Method)
+        if (contextHttp.Request.HttpMethod == HttpMethod.Get.Method)
         {
-            context.Response.ContentType = "application/json";
+            contextHttp.Response.ContentType = "application/json";
             var result = contextEf.Cars.ToList();
 
             if (rawItems.Last() != "cars")
@@ -39,12 +39,12 @@ while (true)
                 {
                     var foundByNameUsersHtml = JsonSerializer.Serialize(foundByNameUsers);
 
-                    context.Response.StatusCode = 200;
+                    contextHttp.Response.StatusCode = 200;
                     await writer.WriteLineAsync(foundByNameUsersHtml.ToString());
                 }
                 else
                 {
-                    context.Response.StatusCode = 404;
+                    contextHttp.Response.StatusCode = 404;
                 }
             }
             else
@@ -54,12 +54,12 @@ while (true)
                 await writer.WriteLineAsync(usersHtml.ToString());
             }
         }
-        else if (context.Request.HttpMethod == HttpMethod.Post.Method)
+        else if (contextHttp.Request.HttpMethod == HttpMethod.Post.Method)
         {
             // POST
-            context.Response.ContentType = "application/json";
+            contextHttp.Response.ContentType = "application/json";
 
-            using (var reader = new StreamReader(context.Request.InputStream))
+            using (var reader = new StreamReader(contextHttp.Request.InputStream))
             {
                 var requestBody = await reader.ReadToEndAsync();
 
@@ -74,25 +74,25 @@ while (true)
 
                     contextEf.SaveChanges();
 
-                    context.Response.StatusCode = 200;
+                    contextHttp.Response.StatusCode = 200;
                     await writer.WriteLineAsync("POST request successful");
                 }
                 catch (JsonException)
                 {
-                    context.Response.StatusCode = 400; // Bad Request
+                    contextHttp.Response.StatusCode = 400; // Bad Request
                     await writer.WriteLineAsync("Invalid JSON format in the request body");
                 }
                 catch (Exception ex)
                 {
-                    context.Response.StatusCode = 500; // Internal Server Error
+                    contextHttp.Response.StatusCode = 500; // Internal Server Error
                     await writer.WriteLineAsync($"Error processing the request: {ex.Message}");
                 }
             }
         }
-        else if (context.Request.HttpMethod == HttpMethod.Delete.Method)
+        else if (contextHttp.Request.HttpMethod == HttpMethod.Delete.Method)
         {
             // DELETE 
-            context.Response.ContentType = "application/json";
+            contextHttp.Response.ContentType = "application/json";
 
             var idToDelete = rawItems.Last(); // Assuming the last part of the URL is the ID to delete
 
@@ -102,18 +102,18 @@ while (true)
             {
                 contextEf.Cars.Remove(carToDelete);
                 contextEf.SaveChanges();
-                context.Response.StatusCode = 200;
+                contextHttp.Response.StatusCode = 200;
                 await writer.WriteLineAsync("DELETE request successful");
             }
             else
             {
-                context.Response.StatusCode = 404; // Not Found
+                contextHttp.Response.StatusCode = 404; // Not Found
                 await writer.WriteLineAsync("Car not found for deletion");
             }
         }
     }
     else
     {
-        context.Response.StatusCode = 404;
+        contextHttp.Response.StatusCode = 404;
     }
 }
