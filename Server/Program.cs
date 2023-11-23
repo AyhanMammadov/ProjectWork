@@ -1,5 +1,5 @@
-﻿using Server.Models;
-using Server.Repositories.EfCoreRepository;
+﻿using Server.Repositories.EfCoreRepository;
+using SharedLib.Models;
 using System.Net;
 using System.Text.Json;
 

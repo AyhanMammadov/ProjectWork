@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server.Models;
 using Server.Repositories.Configuration;
+using SharedLib.Models;
 
 namespace Server.Repositories.EfCoreRepository;
 public class EfRepository : DbContext

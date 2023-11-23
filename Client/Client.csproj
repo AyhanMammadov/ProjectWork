@@ -17,4 +17,8 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SharedLib\SharedLib.csproj" />
+  </ItemGroup>
+
 </Project>

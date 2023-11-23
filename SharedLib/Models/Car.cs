@@ -1,4 +1,4 @@
-﻿namespace Server.Models;
+﻿namespace SharedLib.Models;
 public class Car
 {
     public int Id { get; set; }
@@ -8,5 +8,5 @@ public class Car
     public override string ToString() => $@"Id: {Id}
 Car name: {Name}
 Description: {Description} ";
-}
 
+}

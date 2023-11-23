@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Server.Models;
+using SharedLib.Models;
 
 namespace Server.Repositories.Configuration;
 public class CarConfiguration: IEntityTypeConfiguration<Car>
