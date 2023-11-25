@@ -56,6 +56,10 @@ while (true)
         }
         else if (contextHttp.Request.HttpMethod == HttpMethod.Post.Method)
         {
+            if (rawItems.Last() != "add")
+            {
+                contextHttp.Response.StatusCode = 400; // Bad Request
+            }
             // POST
             contextHttp.Response.ContentType = "application/json";
 

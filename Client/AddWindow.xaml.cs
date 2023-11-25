@@ -50,7 +50,7 @@ namespace Client
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            const string address = "http://localhost:8080/cars";
+            const string address = "http://localhost:8080/cars/add";
             HttpClient httpClient = new HttpClient();
             var newUserJson = new Car()
             {
