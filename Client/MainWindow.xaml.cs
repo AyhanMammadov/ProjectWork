@@ -37,22 +37,28 @@ namespace Client
 
         private async void Cars_Loaded()
         {
-            const string address = "http://localhost:8080/cars";
+            const string address = "http://localhost:8080/cars/add";
             HttpClient httpClient = new HttpClient();
 
             var response = await httpClient.GetAsync(address);
             var responseTxt = await response.Content.ReadAsStringAsync();
 
-            var result = JsonSerializer.Deserialize<IEnumerable<Car>>(responseTxt);
-
-            foreach (var VARIABLE in result)
+            if (!string.IsNullOrWhiteSpace(responseTxt))
             {
-                this.CarsListView.Items.Add(VARIABLE);
-            }
+                var result = JsonSerializer.Deserialize<IEnumerable<Car>>(responseTxt);
 
+                foreach (var car in result)
+                {
+                    this.CarsListView.Items.Add(car);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Server returned empty or invalid JSON data.");
+            }
         }
 
-        
+
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {

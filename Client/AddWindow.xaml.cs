@@ -50,17 +50,24 @@ namespace Client
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            const string address = "http://localhost:8080/cars";
+            const string address = "http://localhost:8080/cars/add";
             HttpClient httpClient = new HttpClient();
-            var newUserJson = new Car()
+            if (string.IsNullOrEmpty(DescriptionTextBox.Text) == false 
+                && string.IsNullOrEmpty(ModelTextBox.Text) == false)
             {
-                Model = this.ModelTextBox.Text,
-                Description = DescriptionTextBox.Text,
-                PathImage = this.AddingImage.Source.ToString(),
-            };
-            var content = JsonContent.Create(newUserJson);
-            var response = await httpClient.PostAsync(address, content);
-            var responseTxt = await response.Content.ReadAsStringAsync();
+                var newUserJson = new Car()
+                {
+                    Model = this.ModelTextBox.Text,
+                    Description = DescriptionTextBox.Text,
+                    PathImage = this.AddingImage.Source.ToString(),
+                };
+
+                var content = JsonContent.Create(newUserJson);
+                var response = await httpClient.PostAsync(address, content);
+                var responseTxt = await response.Content.ReadAsStringAsync();
+            }
+            
+            
 
             //var bitmapImage = new BitmapImage();
             //this.photoImage.Source = bitmapImage.ChangePic(this.blog.PathImage);
