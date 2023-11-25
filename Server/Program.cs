@@ -86,10 +86,9 @@ while (true)
         }
         else if (contextHttp.Request.HttpMethod == HttpMethod.Delete.Method)
         {
-            // DELETE 
             contextHttp.Response.ContentType = "application/json";
 
-            var idToDelete = rawItems.Last(); // Assuming the last part of the URL is the ID to delete
+            var idToDelete = rawItems.Last();
 
             var carToDelete = contextEf.Cars.FirstOrDefault(c => c.Id.ToString() == idToDelete);
 
@@ -98,14 +97,13 @@ while (true)
                 contextEf.Cars.Remove(carToDelete);
                 contextEf.SaveChanges();
                 contextHttp.Response.StatusCode = 200;
-                await writer.WriteLineAsync("DELETE request successful");
             }
             else
             {
                 contextHttp.Response.StatusCode = 404; // Not Found
-                await writer.WriteLineAsync("Car not found for deletion");
             }
         }
+        
     }
     else
     {

@@ -76,7 +76,6 @@ namespace Client
             var responseTxt = await response.Content.ReadAsStringAsync();
             MessageBox.Show(responseTxt);
             Cars_Loaded();
-
         }
     }
 }
