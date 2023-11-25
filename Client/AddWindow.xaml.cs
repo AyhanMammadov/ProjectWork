@@ -55,22 +55,27 @@ namespace Client
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             const string address = "http://localhost:8080/cars/add";
-            var newCar = new Car()
+            if (string.IsNullOrWhiteSpace(this.ModelTextBox.Text) == false && string.IsNullOrWhiteSpace(this.DescriptionTextBox.Text) == false
+                && string.IsNullOrWhiteSpace(this.AddingImage.Source.ToString()) == false)
             {
-                Model = this.ModelTextBox.Text,
-                Description = DescriptionTextBox.Text,
-                PathImage = this.AddingImage.Source.ToString(),
-            };
-            var jsonCar = JsonSerializer.Serialize(newCar);
-            var content = new StringContent(jsonCar, Encoding.UTF8, "application/json");
+                
+                var newCar = new Car()
+                {
+                    Model = this.ModelTextBox.Text,
+                    Description = DescriptionTextBox.Text,
+                    PathImage = this.AddingImage.Source.ToString(),
+                };
+                var jsonCar = JsonSerializer.Serialize(newCar);
+                var content = new StringContent(jsonCar, Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(address, content);
+                var responseTxt = await response.Content.ReadAsStringAsync();
+                this.Close();
+            }
+            else
 
-            var response = await httpClient.PostAsync(address, content);
-
-            var responseTxt = await response.Content.ReadAsStringAsync();
-
-            MessageBox.Show(response.StatusCode.ToString());
-            MessageBox.Show(responseTxt);
-
+            {
+                MessageBox.Show("Fields can not be empty");
+            }
             
         }
     }

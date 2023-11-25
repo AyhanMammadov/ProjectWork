@@ -74,9 +74,19 @@ namespace Client
             var result = JsonSerializer.Deserialize<IEnumerable<Car>>(responseTxt);
 
             var carFindById = result.Where(c => c.Id == this.id).First();
-            carFindById.Model = this.ModelTextBox.Text;
-            carFindById.Description = this.DescriptionTextBox.Text;
-            carFindById.PathImage = this.AddingImage.Source.ToString();
+
+            if (string.IsNullOrWhiteSpace(this.ModelTextBox.Text) == false && string.IsNullOrWhiteSpace(this.DescriptionTextBox.Text) == false
+                && string.IsNullOrWhiteSpace(this.AddingImage.Source.ToString()) == false)
+            {
+                carFindById.Model = this.ModelTextBox.Text;
+                carFindById.Description = this.DescriptionTextBox.Text;
+                carFindById.PathImage = this.AddingImage.Source.ToString();
+                
+            }
+            else
+            {
+                MessageBox.Show("Fields Can not be empty");
+            }
 
             var jsonCar = JsonSerializer.Serialize(carFindById);
             var content = new StringContent(jsonCar, Encoding.UTF8, "application/json");
@@ -85,8 +95,8 @@ namespace Client
 
 
             var responseTXT = await response.Content.ReadAsStringAsync();
-            MessageBox.Show(putMethod.StatusCode.ToString());
-
+            
+            this.Close();
 
         }
     }

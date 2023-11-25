@@ -8,13 +8,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\BMW.jpg" />
     <None Remove="Assets\Logo.png" />
+    <None Remove="Assets\Mercedes.jpg" />
+    <None Remove="Assets\raange-rover.jpg" />
+    <None Remove="Assets\SnoopDog.mp3" />
+    <None Remove="Assets\Tesla.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\BMW.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Mercedes.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\raange-rover.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Tesla.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <EmbeddedResource Include="Assets\SnoopDog.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

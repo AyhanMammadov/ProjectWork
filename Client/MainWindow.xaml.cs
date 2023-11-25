@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Client.ChangePicture;
 using Microsoft.Win32;
 using SharedLib.Models;
 
@@ -27,43 +28,47 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private MediaPlayer mediaPlayer;
         public MainWindow()
         {
             InitializeComponent();
+            mediaPlayer = new MediaPlayer();
 
+
+            mediaPlayer.Open(new Uri("Assets/SnoopDog.mp3", UriKind.Relative));
+
+
+
+            mediaPlayer.Play();
             Cars_Loaded();
             this.DescriptionTextBox.IsEnabled = false;
 
-            Timer timer = new Timer(
-                callback: (obj) =>
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        var selectedItem = this.CarsListView.SelectedItem as Car;
-                        if (selectedItem != null)
-                        {
-                            this.DescriptionTextBox.Text = selectedItem.Description;
-                        }
-                    });
-                },
-                null, 1000, 100);
         }
 
         private async void Cars_Loaded()
         {
-            this.CarsListView.Items.Clear();
-            const string address = "http://localhost:8080/cars";
-            HttpClient httpClient = new HttpClient();
-
-            var response = await httpClient.GetAsync(address);
-            var responseTxt = await response.Content.ReadAsStringAsync();
-
-            var result = JsonSerializer.Deserialize<IEnumerable<Car>>(responseTxt);
-
-            foreach (var VARIABLE in result)
+            try
             {
-                this.CarsListView.Items.Add(VARIABLE);
+                this.CarsListView.Items.Clear();
+                const string address = "http://localhost:8080/cars";
+                HttpClient httpClient = new HttpClient();
+
+                var response = await httpClient.GetAsync(address);
+                var responseTxt = await response.Content.ReadAsStringAsync();
+
+                var result = JsonSerializer.Deserialize<IEnumerable<Car>>(responseTxt);
+
+                foreach (var VARIABLE in result)
+                {
+                    this.CarsListView.Items.Add(VARIABLE);
+                }
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            
 
         }
 
@@ -88,7 +93,10 @@ namespace Client
 
             var response = await httpClient.DeleteAsync($"{address}{res.Id}");
             var responseTxt = await response.Content.ReadAsStringAsync();
-            MessageBox.Show(responseTxt);
+            MessageBox.Show("Deleted");
+            var bitmapImage = new BitmapImage();
+            this.Image.Source = bitmapImage.ChangePic("/Assets/Logo.png");
+            this.DescriptionTextBox.Text = string.Empty;
             Cars_Loaded();
         }
 
@@ -102,6 +110,19 @@ namespace Client
             update.ShowDialog();
             update.Close();
             Cars_Loaded();
+        }
+
+        private void CarsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var bitmapImage = new BitmapImage();
+            var selectedItem = this.CarsListView.SelectedItem as Car;
+            if (selectedItem != null)
+            {
+                this.DescriptionTextBox.Text = selectedItem.Description;
+                this.Image.Source = bitmapImage.ChangePic(selectedItem.PathImage);
+            }
+
+            
         }
     }
 }
