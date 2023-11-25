@@ -103,7 +103,50 @@ while (true)
                 contextHttp.Response.StatusCode = 404; // Not Found
             }
         }
-        
+        else if (contextHttp.Request.HttpMethod == HttpMethod.Put.Method)
+        {
+            // PUT
+            contextHttp.Response.ContentType = "application/json";
+
+            using (var reader = new StreamReader(contextHttp.Request.InputStream))
+            {
+                var requestBody = await reader.ReadToEndAsync();
+
+                try
+                {
+                    var updatedCar = JsonSerializer.Deserialize<Car>(requestBody);
+
+                    int carIdToUpdate = updatedCar.Id;
+
+                    var existingCar = contextEf.Cars.FirstOrDefault(c => c.Id == carIdToUpdate);
+
+                    if (existingCar != null)
+                    {
+                        existingCar.Description = updatedCar.Description;
+                        existingCar.Model = updatedCar.Model;
+                        existingCar.PathImage = updatedCar.PathImage;
+
+                        contextEf.SaveChanges();
+
+                        contextHttp.Response.StatusCode = 200;
+                    }
+                    else
+                    {
+                        contextHttp.Response.StatusCode = 404; // Not Found
+                    }
+                }
+                catch (JsonException)
+                {
+                    contextHttp.Response.StatusCode = 400; // Bad Request
+                    await writer.WriteLineAsync("Invalid JSON format");
+                }
+                catch (Exception ex)
+                {
+                    contextHttp.Response.StatusCode = 500; // Internal Server Error
+                    await writer.WriteLineAsync($"Error: {ex.Message}");
+                }
+            }
+        }
     }
     else
     {
