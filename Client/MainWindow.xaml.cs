@@ -78,5 +78,17 @@ namespace Client
             Cars_Loaded();
 
         }
+
+
+        private async void Update_Click(object sender, RoutedEventArgs e)
+        {
+
+            var res = this.CarsListView.SelectedItem as Car;
+
+            Update update = new Update(res.Id);
+            update.ShowDialog();
+            update.Close();
+            Cars_Loaded();
+        }
     }
 }
