@@ -6,8 +6,6 @@ public class Car
     public string Description { get; set; }
     public string? PathImage { get; set; }
 
-    public override string ToString() => $@"Id: {Id}
-Car name: {Model}
-Description: {Description} "; 
+    public override string ToString() => $@"{Id}. Car name: {Model.ToUpper()}"; 
 
 }
