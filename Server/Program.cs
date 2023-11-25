@@ -112,19 +112,22 @@ while (true)
             {
                 var requestBody = await reader.ReadToEndAsync();
 
+
                 try
                 {
                     var updatedCar = JsonSerializer.Deserialize<Car>(requestBody);
 
                     int carIdToUpdate = updatedCar.Id;
 
-                    var existingCar = contextEf.Cars.FirstOrDefault(c => c.Id == carIdToUpdate);
+                    var existingCar = contextEf.Cars.Where(c => c.Id == carIdToUpdate).FirstOrDefault();
 
                     if (existingCar != null)
                     {
                         existingCar.Description = updatedCar.Description;
                         existingCar.Model = updatedCar.Model;
                         existingCar.PathImage = updatedCar.PathImage;
+
+                        //Console.WriteLine(existingCar.ToString());
 
                         contextEf.SaveChanges();
 

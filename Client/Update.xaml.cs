@@ -60,7 +60,7 @@ namespace Client
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            const string address = "http://localhost:8080/cars/add/update";
+            const string address = "http://localhost:8080/cars";
 
 
             HttpClient httpClient = new HttpClient();
@@ -69,6 +69,7 @@ namespace Client
 
             var response = await httpClient.GetAsync(address);
             var responseTxt = await response.Content.ReadAsStringAsync();
+
 
             var result = JsonSerializer.Deserialize<IEnumerable<Car>>(responseTxt);
 
@@ -80,7 +81,7 @@ namespace Client
             var jsonCar = JsonSerializer.Serialize(carFindById);
             var content = new StringContent(jsonCar, Encoding.UTF8, "application/json");
 
-            var putMethod = await httpClient.PutAsync(address, content);
+            var putMethod = await httpClient.PutAsync(address+"/update", content);
 
 
             var responseTXT = await response.Content.ReadAsStringAsync();
