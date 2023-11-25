@@ -6,6 +6,8 @@ public class Car
     public string Description { get; set; }
     public string? PathImage { get; set; }
 
+
     public override string ToString() => $@"{Model.ToUpper()}"; 
+
 
 }

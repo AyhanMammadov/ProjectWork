@@ -68,11 +68,11 @@ namespace Client
             {
                 MessageBox.Show(e.Message);
             }
-            
 
+            
         }
 
-        
+
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
