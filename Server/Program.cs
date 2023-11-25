@@ -33,7 +33,7 @@ while (true)
             {
                 var name = rawItems.Last();
 
-                var foundByNameUsers = result.Where(u => u.Name != null && u.Name.ToLower().Contains(name));
+                var foundByNameUsers = result.Where(u => u.Model != null && u.Model.ToLower().Contains(name));
 
                 if (foundByNameUsers != null && foundByNameUsers.Any())
                 {
