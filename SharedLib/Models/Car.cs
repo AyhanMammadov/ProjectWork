@@ -7,7 +7,7 @@ public class Car
     public string? PathImage { get; set; }
 
     public override string ToString() => $@"Id: {Id}
-Car name: {Name}
+Car name: {Model}
 Description: {Description} "; 
 
 }

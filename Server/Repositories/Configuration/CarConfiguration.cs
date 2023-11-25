@@ -9,9 +9,11 @@ public class CarConfiguration: IEntityTypeConfiguration<Car>
     {
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.Name).IsRequired().HasMaxLength(30);
+        builder.Property(c => c.Model).IsRequired().HasMaxLength(30);
 
         builder.Property(c => c.Description).HasDefaultValue("There is no information about this car");
+
+        builder.Property(c => c.PathImage).IsRequired().HasMaxLength(200);
     }
 }
 
