@@ -56,7 +56,10 @@ namespace Client
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-
+            AddWindow createCar = new AddWindow();
+            
+            createCar.ShowDialog();
+            createCar.Close();
 
         }
     }
