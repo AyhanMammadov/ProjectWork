@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,9 +24,12 @@ namespace Client
     /// </summary>
     public partial class AddWindow : Window
     {
+        private readonly HttpClient httpClient;
+
         public AddWindow()
         {
             InitializeComponent();
+            this.httpClient = new HttpClient();
         }
 
 
@@ -51,27 +55,23 @@ namespace Client
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             const string address = "http://localhost:8080/cars/add";
-            HttpClient httpClient = new HttpClient();
-            var newUserJson = new Car()
+            var newCar = new Car()
             {
                 Model = this.ModelTextBox.Text,
                 Description = DescriptionTextBox.Text,
                 PathImage = this.AddingImage.Source.ToString(),
             };
-            var content = JsonContent.Create(newUserJson);
+            var jsonCar = JsonSerializer.Serialize(newCar);
+            var content = new StringContent(jsonCar, Encoding.UTF8, "application/json");
+
             var response = await httpClient.PostAsync(address, content);
+
             var responseTxt = await response.Content.ReadAsStringAsync();
 
-            //var bitmapImage = new BitmapImage();
-            //this.photoImage.Source = bitmapImage.ChangePic(this.blog.PathImage);
+            MessageBox.Show(response.StatusCode.ToString());
+            MessageBox.Show(responseTxt);
 
-
-            //var content = JsonContent.Create(newUserJson);
-            //var response = await httpClient.PostAsync(address, content);
-            //var responseTxt = await response.Content.ReadAsStringAsync();
-
-            //System.Console.WriteLine($"Content: {responseTxt}");
-            //System.Console.WriteLine(response);
+            
         }
     }
 }

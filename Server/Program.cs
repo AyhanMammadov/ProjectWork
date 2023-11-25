@@ -56,10 +56,7 @@ while (true)
         }
         else if (contextHttp.Request.HttpMethod == HttpMethod.Post.Method)
         {
-            if (rawItems.Last() != "add")
-            {
-                contextHttp.Response.StatusCode = 400; // Bad Request
-            }
+
             // POST
             contextHttp.Response.ContentType = "application/json";
 
@@ -69,12 +66,8 @@ while (true)
 
                 try
                 {
-                    var newCars = JsonSerializer.Deserialize<List<Car>>(requestBody);
-
-                    foreach (var car in newCars)
-                    {
-                        contextEf.Cars.Add(car);
-                    }
+                    var result = JsonSerializer.Deserialize<Car>(requestBody);
+                    contextEf.Add(result);
 
                     contextEf.SaveChanges();
 
@@ -84,12 +77,10 @@ while (true)
                 catch (JsonException)
                 {
                     contextHttp.Response.StatusCode = 400; // Bad Request
-                    await writer.WriteLineAsync("Invalid JSON format in the request body");
                 }
                 catch (Exception ex)
                 {
                     contextHttp.Response.StatusCode = 500; // Internal Server Error
-                    await writer.WriteLineAsync($"Error processing the request: {ex.Message}");
                 }
             }
         }

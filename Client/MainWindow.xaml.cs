@@ -37,6 +37,7 @@ namespace Client
 
         private async void Cars_Loaded()
         {
+            this.CarsListView.Items.Clear();
             const string address = "http://localhost:8080/cars";
             HttpClient httpClient = new HttpClient();
 
@@ -60,6 +61,7 @@ namespace Client
             
             createCar.ShowDialog();
             createCar.Close();
+            Cars_Loaded();
 
         }
     }
