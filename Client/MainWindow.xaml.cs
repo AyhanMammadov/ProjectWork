@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,6 +34,19 @@ namespace Client
             Cars_Loaded();
             this.DescriptionTextBox.IsEnabled = false;
 
+            Timer timer = new Timer(
+                callback: (obj) =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        var selectedItem = this.CarsListView.SelectedItem as Car;
+                        if (selectedItem != null)
+                        {
+                            this.DescriptionTextBox.Text = selectedItem.Description;
+                        }
+                    });
+                },
+                null, 1000, 100);
         }
 
         private async void Cars_Loaded()

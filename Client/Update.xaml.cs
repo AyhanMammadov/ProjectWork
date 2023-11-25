@@ -85,7 +85,7 @@ namespace Client
 
 
             var responseTXT = await response.Content.ReadAsStringAsync();
-            MessageBox.Show(responseTXT);
+            MessageBox.Show(putMethod.StatusCode.ToString());
 
 
         }
