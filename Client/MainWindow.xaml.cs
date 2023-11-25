@@ -64,5 +64,19 @@ namespace Client
             Cars_Loaded();
 
         }
+
+        private async void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            const string address = "http://localhost:8080/cars/delete/";
+            HttpClient httpClient = new HttpClient();
+
+            var res = this.CarsListView.SelectedItem as Car;
+
+            var response = await httpClient.DeleteAsync($"{address}{res.Id}");
+            var responseTxt = await response.Content.ReadAsStringAsync();
+            MessageBox.Show(responseTxt);
+            Cars_Loaded();
+
+        }
     }
 }
