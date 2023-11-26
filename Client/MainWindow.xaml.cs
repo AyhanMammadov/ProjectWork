@@ -86,30 +86,45 @@ namespace Client
 
         private async void Delete_Click(object sender, RoutedEventArgs e)
         {
-            const string address = "http://localhost:8080/cars/delete/";
-            HttpClient httpClient = new HttpClient();
+            try
+            {
+                const string address = "http://localhost:8080/cars/delete/";
+                HttpClient httpClient = new HttpClient();
 
-            var res = this.CarsListView.SelectedItem as Car;
+                var res = this.CarsListView.SelectedItem as Car;
 
-            var response = await httpClient.DeleteAsync($"{address}{res.Id}");
-            var responseTxt = await response.Content.ReadAsStringAsync();
-            MessageBox.Show("Deleted");
-            var bitmapImage = new BitmapImage();
-            this.Image.Source = bitmapImage.ChangePic("/Assets/Logo.png");
-            this.DescriptionTextBox.Text = string.Empty;
-            Cars_Loaded();
+                var response = await httpClient.DeleteAsync($"{address}{res.Id}");
+                var responseTxt = await response.Content.ReadAsStringAsync();
+                MessageBox.Show("Deleted");
+                var bitmapImage = new BitmapImage();
+                this.Image.Source = bitmapImage.ChangePic("/Assets/Logo.png");
+                this.DescriptionTextBox.Text = string.Empty;
+                Cars_Loaded();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+            
         }
 
 
         private async void Update_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                var res = this.CarsListView.SelectedItem as Car;
 
-            var res = this.CarsListView.SelectedItem as Car;
-
-            Update update = new Update(res.Id);
-            update.ShowDialog();
-            update.Close();
-            Cars_Loaded();
+                Update update = new Update(res.Id);
+                update.ShowDialog();
+                update.Close();
+                Cars_Loaded();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+            
         }
 
         private void CarsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
