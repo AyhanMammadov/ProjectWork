@@ -17,6 +17,7 @@ System.Console.WriteLine($"Server started on '{port}' port");
 while (true)
 {
     var contextHttp = await httpListener.GetContextAsync();
+    contextHttp.Response.ContentType = "application/json";
     var rawUrl = contextHttp.Request.RawUrl.Trim('/').ToLower();
     using var writer = new StreamWriter(contextHttp.Response.OutputStream);
     var rawItems = rawUrl.Split('/');
@@ -24,9 +25,9 @@ while (true)
     if (rawItems.First() == "cars")
     {
         // GET
+        //mojno bilo contextHttp.Request.HttpMethod cherez switch case proverat metodi , no reshil ostavit takim obrazom
         if (contextHttp.Request.HttpMethod == HttpMethod.Get.Method)
         {
-            contextHttp.Response.ContentType = "application/json";
             var result = contextEf.Cars.ToList();
 
             if (rawItems.Last() != "cars")
@@ -58,8 +59,6 @@ while (true)
         {
 
             // POST
-            contextHttp.Response.ContentType = "application/json";
-
             using (var reader = new StreamReader(contextHttp.Request.InputStream))
             {
                 var requestBody = await reader.ReadToEndAsync();
@@ -72,7 +71,6 @@ while (true)
                     contextEf.SaveChanges();
 
                     contextHttp.Response.StatusCode = 200;
-                    await writer.WriteLineAsync("POST request successful");
                 }
                 catch (JsonException)
                 {
@@ -86,7 +84,6 @@ while (true)
         }
         else if (contextHttp.Request.HttpMethod == HttpMethod.Delete.Method)
         {
-            contextHttp.Response.ContentType = "application/json";
 
             var idToDelete = rawItems.Last();
 
@@ -106,13 +103,9 @@ while (true)
         else if (contextHttp.Request.HttpMethod == HttpMethod.Put.Method)
         {
             // PUT
-            contextHttp.Response.ContentType = "application/json";
-
             using (var reader = new StreamReader(contextHttp.Request.InputStream))
             {
                 var requestBody = await reader.ReadToEndAsync();
-
-
                 try
                 {
                     var updatedCar = JsonSerializer.Deserialize<Car>(requestBody);
@@ -127,7 +120,6 @@ while (true)
                         existingCar.Model = updatedCar.Model;
                         existingCar.PathImage = updatedCar.PathImage;
 
-                        //Console.WriteLine(existingCar.ToString());
 
                         contextEf.SaveChanges();
 
