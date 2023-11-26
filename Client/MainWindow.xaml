@@ -55,7 +55,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <TextBox x:Name="DescriptionTextBox" FontSize="30"/>
+                <TextBox x:Name="DescriptionTextBox" FontSize="30" TextWrapping="Wrap"/>
 
                 <Image Grid.Row="1" Source="\Assets/Logo.png"
                        x:Name="Image"/>

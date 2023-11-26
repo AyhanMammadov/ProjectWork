@@ -42,14 +42,14 @@
                    FontSize="18"/>
 
             <TextBox Grid.Column="1" Grid.Row="0"
-                     x:Name="ModelTextBox"/>
+                     x:Name="ModelTextBox" TextWrapping="Wrap"/>
 
 
             <Label Grid.Column="0" Grid.Row="2" Content="Description:"
                    FontSize="18"/>
 
             <TextBox Grid.Column="1" Grid.Row="2"
-                     x:Name="DescriptionTextBox"/>
+                     x:Name="DescriptionTextBox" TextWrapping="Wrap"/>
 
             <Label Grid.Column="0" Grid.Row="3" Content="Image:"
                    FontSize="18"/>
