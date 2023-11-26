@@ -60,43 +60,48 @@ namespace Client
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            const string address = "http://localhost:8080/cars";
-
-
-            HttpClient httpClient = new HttpClient();
-
-         
-
-            var response = await httpClient.GetAsync(address);
-            var responseTxt = await response.Content.ReadAsStringAsync();
-
-
-            var result = JsonSerializer.Deserialize<IEnumerable<Car>>(responseTxt);
-
-            var carFindById = result.Where(c => c.Id == this.id).First();
-
-            if (string.IsNullOrWhiteSpace(this.ModelTextBox.Text) == false && string.IsNullOrWhiteSpace(this.DescriptionTextBox.Text) == false
-                && string.IsNullOrWhiteSpace(this.AddingImage.Source.ToString()) == false)
+            try
             {
-                carFindById.Model = this.ModelTextBox.Text;
-                carFindById.Description = this.DescriptionTextBox.Text;
-                carFindById.PathImage = this.AddingImage.Source.ToString();
-                
+                const string address = "http://localhost:8080/cars";
+
+                HttpClient httpClient = new HttpClient();
+
+                var response = await httpClient.GetAsync(address);
+                var responseTxt = await response.Content.ReadAsStringAsync();
+
+
+                var result = JsonSerializer.Deserialize<IEnumerable<Car>>(responseTxt);
+
+                var carFindById = result.Where(c => c.Id == this.id).First();
+
+                if (string.IsNullOrWhiteSpace(this.ModelTextBox.Text) == false && string.IsNullOrWhiteSpace(this.DescriptionTextBox.Text) == false
+                                                                               && string.IsNullOrWhiteSpace(this.AddingImage.Source.ToString()) == false)
+                {
+                    carFindById.Model = this.ModelTextBox.Text;
+                    carFindById.Description = this.DescriptionTextBox.Text;
+                    carFindById.PathImage = this.AddingImage.Source.ToString();
+
+                }
+                else
+                {
+                    MessageBox.Show("Fields Can not be empty");
+                }
+
+                var jsonCar = JsonSerializer.Serialize(carFindById);
+                var content = new StringContent(jsonCar, Encoding.UTF8, "application/json");
+
+                var putMethod = await httpClient.PutAsync(address + "/update", content);
+
+
+                var responseTXT = await response.Content.ReadAsStringAsync();
+
+                this.Close();
             }
-            else
+            catch (Exception exception)
             {
-                MessageBox.Show("Fields Can not be empty");
+                MessageBox.Show(exception.Message);
             }
-
-            var jsonCar = JsonSerializer.Serialize(carFindById);
-            var content = new StringContent(jsonCar, Encoding.UTF8, "application/json");
-
-            var putMethod = await httpClient.PutAsync(address+"/update", content);
-
-
-            var responseTXT = await response.Content.ReadAsStringAsync();
             
-            this.Close();
 
         }
     }
